@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: incidents
+  name: incidents
+  namespace: incidents
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: incidents
+  template:
+    metadata:
+      labels:
+        app: incidents
+        actorSystemName: incidents
+    spec:
+      imagePullSecrets:
+      - name: registrycred
+      containers:
+      - name: incidents
+        image: gts-gi-frontend-team-fe-tools-incidents-docker-local.artifactory.swg-devops.com/gts-gi-frontend-incidents-local:1
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: management
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 10
+        livenessProbe:
+          httpGet:
+            path: "/alive"
+            port: management
+          periodSeconds: 10
+          failureThreshold: 5
+          initialDelaySeconds: 20
+        ports:
+        # akka-management and bootstrap
+        - name: management
+          containerPort: 8558
+          protocol: TCP
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: REQUIRED_CONTACT_POINT_NR
+          value: "3"
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pod-reader
+  namespace: incidents
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: incidents
+subjects:
+# Note the `name` line below. The first default refers to the namespace. The second refers to the service account name.
+# For instance, `name: system:serviceaccount:myns:default` would refer to the default service account in namespace `myns`
+- kind: User
+  name: system:serviceaccount:incidents:default
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
