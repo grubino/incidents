@@ -1,16 +1,13 @@
 package com.ibm.neteng
 
-import akka.actor.{Props, TypedActor, TypedProps}
-import akka.actor.typed.{ActorSystem}
+import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.ClusterEvent
 import akka.cluster.typed.{Cluster, Subscribe}
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Directives.complete
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.javadsl.AkkaManagement
 import com.ibm.neteng.actor.IncidentsPersistentBehavior
-import com.ibm.neteng.actor.IncidentsPersistentBehavior.IncidentCommand
 import com.typesafe.config.ConfigFactory
 import com.ibm.neteng.endpoint.IncidentsEndpoints
 

@@ -7,6 +7,12 @@ lazy val akkaHttpVersion = "10.2.1"
 lazy val akkaVersion = "2.6.10"
 lazy val akkaManagementVersion = "1.0.9"
 lazy val akkaCassandraVersion  = "0.102"
+lazy val akkaProjectionVersion = "1.0.0"
+
+// Enable the Lightbend Telemetry (Cinnamon) sbt plugin
+lazy val app = project in file(".") enablePlugins Cinnamon
+
+enablePlugins(JavaServerAppPackaging, DockerPlugin)
 
 // make version compatible with docker for publishing
 ThisBuild / dynverSeparator := "-"
@@ -17,8 +23,9 @@ fork in run := true
 Compile / run / fork := true
 
 mainClass in (Compile, run) := Some("com.ibm.neteng.Incidents")
-
-enablePlugins(JavaServerAppPackaging, DockerPlugin)
+cinnamon in run := true
+cinnamon in test := true
+cinnamonLogLevel := "INFO"
 
 dockerExposedPorts := Seq(8080, 8558, 25520)
 dockerUpdateLatest := true
@@ -31,6 +38,8 @@ libraryDependencies ++= {
   Seq(
     "com.typesafe.akka" %% "akka-persistence-typed" % akkaVersion,
     "com.typesafe.akka" %% "akka-persistence-cassandra" % akkaCassandraVersion,
+    "com.lightbend.akka" %% "akka-projection-core" % akkaProjectionVersion,
+    "com.lightbend.akka" %% "akka-projection-eventsourced" % akkaProjectionVersion,
     "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion,
     "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
@@ -48,3 +57,15 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
     "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test)
 }
+
+libraryDependencies ++= Seq(
+  Cinnamon.library.cinnamonAkka,
+  Cinnamon.library.cinnamonAkkaTyped,
+  Cinnamon.library.cinnamonAkkaPersistence,
+  Cinnamon.library.cinnamonAkkaHttp,
+  Cinnamon.library.cinnamonAkkaStream,
+  Cinnamon.library.cinnamonAkkaProjection,
+  Cinnamon.library.cinnamonJvmMetricsProducer,
+  Cinnamon.library.cinnamonCHMetrics3,
+  Cinnamon.library.cinnamonCHMetricsElasticsearchReporter
+)

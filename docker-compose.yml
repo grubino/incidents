@@ -24,6 +24,7 @@ services:
     image: gts-gi-frontend-team-fe-tools-incidents-docker-local.artifactory.swg-devops.com/gts-gi-frontend-incidents-local:1
     links:
     - cassandra-db
+    - elasticsearch
     depends_on:
     - cassandra-db
     expose:
@@ -36,12 +37,14 @@ services:
       CASSANDRA_CONTACT_POINT1: cassandra-db
     networks:
     - statepoc
+    - cinnamon
 
   cluster:
     image: gts-gi-frontend-team-fe-tools-incidents-docker-local.artifactory.swg-devops.com/gts-gi-frontend-incidents-local:1
     links:
     - seed
     - cassandra-db
+    - elasticsearch
     depends_on:
     - seed
     - cassandra-db
@@ -53,6 +56,7 @@ services:
       CASSANDRA_CONTACT_POINT1: cassandra-db
     networks:
     - statepoc
+    - cinnamon
 
   endpoint:
     image: gts-gi-frontend-team-fe-tools-incidents-docker-local.artifactory.swg-devops.com/gts-gi-frontend-incidents-local:1
@@ -65,6 +69,7 @@ services:
     links:
     - seed
     - cassandra-db
+    - elasticsearch
     depends_on:
     - seed
     - cassandra-db
@@ -74,7 +79,47 @@ services:
     - "25520:25520"
     networks:
     - statepoc
+    - cinnamon
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.3
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    networks:
+      - cinnamon
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.6.3
+    ports:
+      - "5601:5601"
+    networks:
+      - cinnamon
+    depends_on:
+      - elasticsearch
+  backend:
+    image: lightbend-docker-registry.bintray.io/cinnamon/cinnamon-vizceral:0.1
+    ports:
+      - "8999:8999"
+    networks:
+      - cinnamon
+    depends_on:
+      - elasticsearch
+  web:
+    image: lightbend-docker-registry.bintray.io/cinnamon/cinnamon-vizceral-frontend:0.1.1
+    ports:
+      - "8081:80"
+    networks:
+      - cinnamon
+    depends_on:
+      - backend
 
 networks:
+  cinnamon:
   statepoc:
     driver: bridge
