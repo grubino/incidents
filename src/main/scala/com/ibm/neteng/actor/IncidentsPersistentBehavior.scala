@@ -92,7 +92,7 @@ object IncidentsPersistentBehavior {
 
           }
         }
-      )
+      ).withTagger(_ => Set(IncidentsTags.Single))
     }
 
   var state = IncidentsHistory()

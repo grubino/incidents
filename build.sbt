@@ -8,6 +8,7 @@ lazy val akkaVersion = "2.6.10"
 lazy val akkaManagementVersion = "1.0.9"
 lazy val akkaCassandraVersion  = "0.102"
 lazy val akkaProjectionVersion = "1.0.0"
+lazy val alpakkaVersion = "2.0.2"
 
 // Enable the Lightbend Telemetry (Cinnamon) sbt plugin
 lazy val app = project in file(".") enablePlugins Cinnamon
@@ -38,6 +39,8 @@ libraryDependencies ++= {
   Seq(
     "com.typesafe.akka" %% "akka-persistence-typed" % akkaVersion,
     "com.typesafe.akka" %% "akka-persistence-cassandra" % akkaCassandraVersion,
+    "com.lightbend.akka" %% "akka-stream-alpakka-cassandra" % alpakkaVersion,
+    "com.lightbend.akka" %% "akka-projection-cassandra" % akkaProjectionVersion,
     "com.lightbend.akka" %% "akka-projection-core" % akkaProjectionVersion,
     "com.lightbend.akka" %% "akka-projection-eventsourced" % akkaProjectionVersion,
     "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion,
