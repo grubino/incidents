@@ -1,4 +1,4 @@
-package com.ibm.neteng.actor
+package com.luzene.actor
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.Behavior
@@ -6,7 +6,7 @@ import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
-import com.ibm.neteng.actor.IncidentPersistentBehavior.Incident
+import com.luzene.actor.IncidentPersistentBehavior.Incident
 import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
 import akka.persistence.query.Offset
 import akka.projection.eventsourced.scaladsl.EventSourcedProvider

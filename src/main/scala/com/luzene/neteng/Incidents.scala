@@ -1,4 +1,4 @@
-package com.ibm.neteng
+package com.luzene
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
@@ -15,9 +15,9 @@ import akka.projection.{ProjectionBehavior, ProjectionId, cassandra}
 import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.projection.scaladsl.SourceProvider
 import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
-import com.ibm.neteng.actor.{IncidentProjectionHandler, IncidentsPersistentBehavior, IncidentsRepositoryImpl, IncidentsTags}
+import com.luzene.actor.{IncidentProjectionHandler, IncidentsPersistentBehavior, IncidentsRepositoryImpl, IncidentsTags}
 import com.typesafe.config.ConfigFactory
-import com.ibm.neteng.endpoint.IncidentsEndpoints
+import com.luzene.endpoint.IncidentsEndpoints
 
 
 object Incidents {
@@ -50,7 +50,7 @@ object Incidents {
         )
 
       val session = CassandraSessionRegistry(context.system).sessionFor("akka.projection.cassandra.session-config")
-      val repo = IncidentsRepositoryImpl(session)
+      val repo = new IncidentsRepositoryImpl(session)
       val projection = CassandraProjection.atLeastOnce(
         projectionId = ProjectionId(entityId, IncidentsTags.Single),
         sourceProvider,

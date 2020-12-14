@@ -1,10 +1,10 @@
-package com.ibm.neteng.endpoint
+package com.luzene.endpoint
 
 import IncidentsAPI._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.ibm.neteng.actor.IncidentPersistentBehavior.Incident
-import com.ibm.neteng.actor.IncidentsPersistentBehavior.{IncidentHeld, IncidentResolved, IncidentUpdated, UpdateIncident}
-import com.ibm.neteng.actor.IncidentsPersistentBehavior.{IncidentReported, IncidentsHistory, ReportIncident}
+import com.luzene.actor.IncidentPersistentBehavior.Incident
+import com.luzene.actor.IncidentsPersistentBehavior.{IncidentHeld, IncidentResolved, IncidentUpdated, UpdateIncident}
+import com.luzene.actor.IncidentsPersistentBehavior.{IncidentReported, IncidentsHistory, ReportIncident}
 import spray.json._
 
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {

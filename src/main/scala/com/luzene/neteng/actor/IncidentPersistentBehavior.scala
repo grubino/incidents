@@ -1,9 +1,9 @@
-package com.ibm.neteng.actor
+package com.luzene.actor
 
 import akka.actor.typed.Behavior
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
-import com.ibm.neteng.actor.IncidentsPersistentBehavior._
+import com.luzene.actor.IncidentsPersistentBehavior._
 
 object IncidentPersistentBehavior {
 

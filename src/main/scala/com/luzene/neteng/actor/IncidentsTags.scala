@@ -1,4 +1,4 @@
-package com.ibm.neteng.actor
+package com.luzene.actor
 
 object IncidentsTags {
   val Single = "incidents"

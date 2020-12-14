@@ -1,4 +1,4 @@
-package com.ibm.neteng
+package com.luzene
 
 import akka.actor.ActorSystem
 import org.slf4j.LoggerFactory

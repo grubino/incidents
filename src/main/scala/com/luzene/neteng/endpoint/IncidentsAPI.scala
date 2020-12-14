@@ -1,4 +1,4 @@
-package com.ibm.neteng.endpoint
+package com.luzene.endpoint
 
 object IncidentsAPI {
 

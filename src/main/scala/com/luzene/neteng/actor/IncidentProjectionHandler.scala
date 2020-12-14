@@ -1,10 +1,10 @@
-package com.ibm.neteng.actor
+package com.luzene.actor
 
 import akka.Done
 import akka.actor.typed.ActorSystem
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.scaladsl.Handler
-import com.ibm.neteng.actor.IncidentPersistentBehavior.Incident
+import com.luzene.actor.IncidentPersistentBehavior.Incident
 
 import scala.concurrent.{ExecutionContext, Future}
 

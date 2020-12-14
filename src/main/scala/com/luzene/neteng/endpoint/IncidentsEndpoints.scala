@@ -1,4 +1,4 @@
-package com.ibm.neteng.endpoint
+package com.luzene.endpoint
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.AskPattern._
@@ -11,10 +11,10 @@ import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.http.scaladsl.server.{Directives, ExceptionHandler, Route}
 import akka.stream.Materializer
 import akka.util.Timeout
-import com.ibm.neteng.actor.IncidentPersistentBehavior
-import com.ibm.neteng.actor.IncidentPersistentBehavior.Incident
-import com.ibm.neteng.actor.IncidentsPersistentBehavior._
-import com.ibm.neteng.endpoint.IncidentsAPI._
+import com.luzene.actor.IncidentPersistentBehavior
+import com.luzene.actor.IncidentPersistentBehavior.Incident
+import com.luzene.actor.IncidentsPersistentBehavior._
+import com.luzene.endpoint.IncidentsAPI._
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.language.postfixOps

@@ -1,4 +1,4 @@
-organization in ThisBuild := "com.ibm.neteng"
+organization in ThisBuild := "com.luzene"
 
 name := "incident-log"
 
@@ -10,9 +10,6 @@ lazy val akkaCassandraVersion  = "0.102"
 lazy val akkaProjectionVersion = "1.0.0"
 lazy val alpakkaVersion = "2.0.2"
 
-// Enable the Lightbend Telemetry (Cinnamon) sbt plugin
-lazy val app = project in file(".") enablePlugins Cinnamon
-
 enablePlugins(JavaServerAppPackaging, DockerPlugin)
 
 // make version compatible with docker for publishing
@@ -23,16 +20,13 @@ classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.AllLibraryJars
 fork in run := true
 Compile / run / fork := true
 
-mainClass in (Compile, run) := Some("com.ibm.neteng.Incidents")
-cinnamon in run := true
-cinnamon in test := true
-cinnamonLogLevel := "INFO"
+mainClass in (Compile, run) := Some("com.luzene.Incidents")
 
 dockerExposedPorts := Seq(8080, 8558, 25520)
 dockerUpdateLatest := true
 dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
-dockerAlias := DockerAlias(sys.props.get("docker.registry"), None, "gts-gi-frontend-incidents-local", Some("1"))
+dockerAlias := DockerAlias(None, None, "bibilthaysose/incidents", Some("1"))
 dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
 
 libraryDependencies ++= {
@@ -60,15 +54,3 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
     "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test)
 }
-
-libraryDependencies ++= Seq(
-  Cinnamon.library.cinnamonAkka,
-  Cinnamon.library.cinnamonAkkaTyped,
-  Cinnamon.library.cinnamonAkkaPersistence,
-  Cinnamon.library.cinnamonAkkaHttp,
-  Cinnamon.library.cinnamonAkkaStream,
-  Cinnamon.library.cinnamonAkkaProjection,
-  Cinnamon.library.cinnamonJvmMetricsProducer,
-  Cinnamon.library.cinnamonCHMetrics3,
-  Cinnamon.library.cinnamonCHMetricsElasticsearchReporter
-)

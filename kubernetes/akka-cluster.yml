@@ -20,7 +20,7 @@ spec:
       - name: registrycred
       containers:
       - name: incidents
-        image: gts-gi-frontend-team-fe-tools-incidents-docker-local.artifactory.swg-devops.com/gts-gi-frontend-incidents-local:1
+        image: bibilthaysose/incidents
         readinessProbe:
           httpGet:
             path: /ready

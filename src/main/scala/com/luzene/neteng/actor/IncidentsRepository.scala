@@ -1,8 +1,8 @@
-package com.ibm.neteng.actor
+package com.luzene.actor
 
 import akka.Done
-import akka.persistence.cassandra.session.scaladsl.CassandraSession
-import com.ibm.neteng.actor.IncidentPersistentBehavior.Incident
+import akka.stream.alpakka.cassandra.scaladsl.CassandraSession
+import com.luzene.actor.IncidentPersistentBehavior.Incident
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -20,11 +20,11 @@ class IncidentsRepositoryImpl(session: CassandraSession)(implicit val ec: Execut
   import IncidentsRepositoryImpl._
 
   override def update(incident: Incident): Future[Done] = {
-    session.executeWrite(s"UPDATE $Keyspace.$IncidentsTable SET data = ? WHERE incident_id = ?", incident.data, incident.id)
+    session.executeWrite(s"UPDATE $Keyspace.$IncidentsTable SET data = ? WHERE incident_id = ?", incident.data, incident.id.toString)
   }
 
   override def getItem(id: Long): Future[Option[Incident]] = {
-    session.selectOne(s"SELECT incident_id, data FROM $Keyspace.$IncidentsTable WHERE incident_id = ?", id)
+    session.selectOne(s"SELECT incident_id, data FROM $Keyspace.$IncidentsTable WHERE incident_id = ?", id.toString)
       .map(opt => opt.map(row => Incident(row.getLong("incident_id"), row.getString("data"))))
   }
 }
