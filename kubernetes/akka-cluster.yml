@@ -2,6 +2,63 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app: incidents-endpoint
+  name: incidents-endpoint
+  namespace: incidents
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: incidents-endpoint
+  template:
+    metadata:
+      labels:
+        app: incidents-endpoint
+        actorSystemName: incidents
+    spec:
+      imagePullSecrets:
+      - name: registrycred
+      containers:
+      - name: incidents
+        image: bibilthaysose/incidents
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: management
+          periodSeconds: 10
+          failureThreshold: 3
+          initialDelaySeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /alive
+            port: management
+          periodSeconds: 10
+          failureThreshold: 5
+          initialDelaySeconds: 20
+        ports:
+        # akka-management and bootstrap
+        - name: management
+          containerPort: 8558
+          protocol: TCP
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: JAVA_OPTS
+          value: "-Dconfig.resource=endpoint-application-k8s.conf"
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: REQUIRED_CONTACT_POINT_NR
+          value: "3"
+        - name: CASSANDRA_CONTACT_POINT1
+          value: cassandra
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
     app: incidents
   name: incidents
   namespace: incidents
@@ -44,6 +101,8 @@ spec:
           containerPort: 8080
           protocol: TCP
         env:
+        - name: JAVA_OPTS
+          value: "-Dconfig.resource=cluster-application-k8s.conf"
         - name: NAMESPACE
           valueFrom:
             fieldRef:
