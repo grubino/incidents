@@ -50,6 +50,8 @@ spec:
               fieldPath: metadata.namespace
         - name: REQUIRED_CONTACT_POINT_NR
           value: "3"
+        - name: CASSANDRA_CONTACT_POINT1
+          value: cassandra
 
 ---
 kind: Role

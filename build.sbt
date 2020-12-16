@@ -9,6 +9,9 @@ lazy val akkaManagementVersion = "1.0.9"
 lazy val akkaCassandraVersion  = "0.102"
 lazy val akkaProjectionVersion = "1.0.0"
 lazy val alpakkaVersion = "2.0.2"
+lazy val chMetricsVersion = "3.0.2"
+
+resolvers += "Maven Repo" at  "https://repo1.maven.org/maven2/"
 
 enablePlugins(JavaServerAppPackaging, DockerPlugin)
 
@@ -26,7 +29,7 @@ dockerExposedPorts := Seq(8080, 8558, 25520)
 dockerUpdateLatest := true
 dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
-dockerAlias := DockerAlias(None, None, "bibilthaysose/incidents", Some("1"))
+dockerAlias := DockerAlias(None, None, "bibilthaysose/incidents", Some("4"))
 dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
 
 libraryDependencies ++= {
@@ -48,6 +51,7 @@ libraryDependencies ++= {
     "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % akkaManagementVersion,
     "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % akkaManagementVersion,
     "com.lightbend.akka.management" %% "akka-management-cluster-http" % akkaManagementVersion,
+    "com.codahale.metrics" % "metrics-core" % chMetricsVersion,
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
     "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
     "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test,
