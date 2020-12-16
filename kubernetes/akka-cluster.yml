@@ -53,7 +53,7 @@ spec:
         - name: REQUIRED_CONTACT_POINT_NR
           value: "3"
         - name: CASSANDRA_CONTACT_POINT1
-          value: cassandra
+          value: cassandra.incidents.svc.cluster.local
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -110,7 +110,7 @@ spec:
         - name: REQUIRED_CONTACT_POINT_NR
           value: "3"
         - name: CASSANDRA_CONTACT_POINT1
-          value: cassandra
+          value: cassandra.incidents.svc.cluster.local
 
 ---
 kind: Role
