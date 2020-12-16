@@ -40,22 +40,23 @@ object Incidents {
         Http().newServerAt("0.0.0.0", 8080).bindFlow(routes.psRoutes)
       } else if (cluster.selfMember.hasRole("cluster")) {
         context.spawn(IncidentsPersistentBehavior(entityId), "incidents")
+
+        val sourceProvider: SourceProvider[Offset, EventEnvelope[IncidentsPersistentBehavior.IncidentEvent]] =
+          EventSourcedProvider.eventsByTag[IncidentsPersistentBehavior.IncidentEvent](
+            context.system,
+            readJournalPluginId = CassandraReadJournal.Identifier,
+            tag = IncidentsTags.Single
+          )
+
+        val session = CassandraSessionRegistry(context.system).sessionFor("akka.projection.cassandra.session-config")
+        val repo = new IncidentsRepositoryImpl(session)
+        val projection = CassandraProjection.atLeastOnce(
+          projectionId = ProjectionId(entityId, IncidentsTags.Single),
+          sourceProvider,
+          handler = () => new IncidentProjectionHandler(IncidentsTags.Single, context.system, repo))
+        context.spawn(ProjectionBehavior(projection), projection.projectionId.id)
+
       }
-
-      val sourceProvider: SourceProvider[Offset, EventEnvelope[IncidentsPersistentBehavior.IncidentEvent]] =
-        EventSourcedProvider.eventsByTag[IncidentsPersistentBehavior.IncidentEvent](
-          context.system,
-          readJournalPluginId = CassandraReadJournal.Identifier,
-          tag = IncidentsTags.Single
-        )
-
-      val session = CassandraSessionRegistry(context.system).sessionFor("akka.projection.cassandra.session-config")
-      val repo = new IncidentsRepositoryImpl(session)
-      val projection = CassandraProjection.atLeastOnce(
-        projectionId = ProjectionId(entityId, IncidentsTags.Single),
-        sourceProvider,
-        handler = () => new IncidentProjectionHandler(IncidentsTags.Single, context.system, repo))
-      context.spawn(ProjectionBehavior(projection), projection.projectionId.id)
 
       // Create an actor that handles cluster domain events
       val listener = context.spawn(Behaviors.receive[ClusterEvent.MemberEvent]((ctx, event) => {
