@@ -11,6 +11,22 @@ spec:
   selector:
     app: cassandra
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: cassandra-peers
+  name: cassandra-peers
+spec:
+  clusterIP: None
+  ports:
+  - port: 7000
+    name: intra-node-communication
+  - port: 7001
+    name: tls-intra-node-communication
+  selector:
+    name: cassandra
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -66,14 +82,14 @@ spec:
             value: 512M
           - name: HEAP_NEWSIZE
             value: 128M
-          - name: CASSANDRA_SEEDS
-            value: "cassandra-0.cassandra.incidents.svc.cluster.local"
+          - name: PEER_DISCOVERY_SERVICE
+            value: cassandra-peer
           - name: CASSANDRA_CLUSTER_NAME
-            value: "cluster_data"
+            value: "kube_cluster"
           - name: CASSANDRA_DC
-            value: "dc1"
+            value: "kubernetes"
           - name: CASSANDRA_RACK
-            value: "rack1"
+            value: "minikube"
         readinessProbe:
           exec:
             command: [ "/bin/sh", "-c", "nodetool status" ]
