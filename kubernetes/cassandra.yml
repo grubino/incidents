@@ -6,7 +6,6 @@ metadata:
   name: cassandra
   namespace: incidents
 spec:
-  clusterIP: None
   ports:
   - port: 9042
   selector:
@@ -33,7 +32,7 @@ spec:
       terminationGracePeriodSeconds: 1800
       containers:
       - name: cassandra
-        image: gcr.io/google-samples/cassandra:v13
+        image: cassandra
         imagePullPolicy: Always
         ports:
         - containerPort: 7000
@@ -68,7 +67,7 @@ spec:
         - name: HEAP_NEWSIZE
           value: 100M
         - name: CASSANDRA_SEEDS
-          value: "cassandra-0.cassandra.incidents.svc.cluster.local,cassandra-1.cassandra.incidents.svc.cluster.local"
+          value: "cassandra-0.cassandra.incidents.svc.cluster.local"
         - name: CASSANDRA_CLUSTER_NAME
           value: "cluster_data"
         - name: CASSANDRA_DC
