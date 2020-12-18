@@ -21,7 +21,7 @@ spec:
       containers:
       - name: incidents
         image: bibilthaysose/incidents
-        imagePullPolicy: always
+        imagePullPolicy: Always
         readinessProbe:
           httpGet:
             path: /ready
@@ -87,7 +87,7 @@ spec:
       containers:
       - name: incidents
         image: bibilthaysose/incidents
-        imagePullPolicy: always
+        imagePullPolicy: Always
         readinessProbe:
           httpGet:
             path: /ready
