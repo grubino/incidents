@@ -27,33 +27,33 @@ object Incidents {
   def main(args: Array[String]): Unit = {
     ActorSystem[Nothing](Behaviors.setup[Nothing] { context =>
       import akka.actor.typed.scaladsl.adapter._
-      implicit val classicSystem = context.system.toClassic
+      implicit val system = context.system
       implicit val ec = context.system.executionContext
       val entityId = "incidents"
 
-      val cluster = Cluster(context.system)
-      context.log.info("Started [" + context.system + "], cluster.selfAddress = " + cluster.selfMember.address + ")")
+      val cluster = Cluster(system)
+      context.log.info("Started [" + system + "], cluster.selfAddress = " + cluster.selfMember.address + ")")
 
       if (cluster.selfMember.hasRole("endpoint")) {
         val incidentCommandActor = context.spawn(IncidentsPersistentBehavior(entityId), "incident")
-        lazy val routes = new IncidentsEndpoints(context.system, incidentCommandActor)
+        lazy val routes = new IncidentsEndpoints(system, incidentCommandActor)
         Http().newServerAt("0.0.0.0", 8080).bindFlow(routes.psRoutes)
       } else if (cluster.selfMember.hasRole("cluster")) {
         context.spawn(IncidentsPersistentBehavior(entityId), "incidents")
 
         val sourceProvider: SourceProvider[Offset, EventEnvelope[IncidentsPersistentBehavior.IncidentEvent]] =
           EventSourcedProvider.eventsByTag[IncidentsPersistentBehavior.IncidentEvent](
-            context.system,
+            system,
             readJournalPluginId = CassandraReadJournal.Identifier,
             tag = IncidentsTags.Single
           )
 
-        val session = CassandraSessionRegistry(context.system).sessionFor("akka.projection.cassandra.session-config")
+        val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config")
         val repo = new IncidentsRepositoryImpl(session)
         val projection = CassandraProjection.atLeastOnce(
           projectionId = ProjectionId(entityId, IncidentsTags.Single),
           sourceProvider,
-          handler = () => new IncidentProjectionHandler(IncidentsTags.Single, context.system, repo))
+          handler = () => new IncidentProjectionHandler(IncidentsTags.Single, system, repo))
         context.spawn(ProjectionBehavior(projection), projection.projectionId.id)
 
       }
@@ -64,10 +64,10 @@ object Incidents {
         Behaviors.same
       }), "listener")
 
-      Cluster(context.system).subscriptions ! Subscribe(listener, classOf[ClusterEvent.MemberEvent])
+      Cluster(system).subscriptions ! Subscribe(listener, classOf[ClusterEvent.MemberEvent])
 
-      AkkaManagement.get(classicSystem).start()
-      ClusterBootstrap.get(classicSystem).start()
+      AkkaManagement(system).start()
+      ClusterBootstrap(system).start()
       Behaviors.empty
     }, "incidents")
   }
