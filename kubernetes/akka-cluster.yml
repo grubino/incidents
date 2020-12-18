@@ -16,6 +16,7 @@ spec:
         app: incidents-endpoint
         actorSystemName: incidents
     spec:
+      imagePullPolicy: always
       imagePullSecrets:
       - name: registrycred
       containers:
@@ -37,6 +38,9 @@ spec:
           initialDelaySeconds: 20
         ports:
         # akka-management and bootstrap
+        - name: remoting
+          containerPort: 2552
+          protocol: TCP
         - name: management
           containerPort: 8558
           protocol: TCP
@@ -78,6 +82,7 @@ spec:
         app: incidents
         actorSystemName: incidents
     spec:
+      imagePullPolicy: always
       imagePullSecrets:
       - name: registrycred
       containers:
@@ -99,6 +104,9 @@ spec:
           initialDelaySeconds: 20
         ports:
         # akka-management and bootstrap
+        - name: remoting
+          containerPort: 2552
+          protocol: TCP
         - name: management
           containerPort: 8558
           protocol: TCP
