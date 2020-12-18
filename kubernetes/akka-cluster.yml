@@ -16,12 +16,12 @@ spec:
         app: incidents-endpoint
         actorSystemName: incidents
     spec:
-      imagePullPolicy: always
       imagePullSecrets:
       - name: registrycred
       containers:
       - name: incidents
         image: bibilthaysose/incidents
+        imagePullPolicy: always
         readinessProbe:
           httpGet:
             path: /ready
@@ -82,12 +82,12 @@ spec:
         app: incidents
         actorSystemName: incidents
     spec:
-      imagePullPolicy: always
       imagePullSecrets:
       - name: registrycred
       containers:
       - name: incidents
         image: bibilthaysose/incidents
+        imagePullPolicy: always
         readinessProbe:
           httpGet:
             path: /ready
