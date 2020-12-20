@@ -10,9 +10,13 @@ spec:
     port: 8080
     protocol: TCP
     targetPort: 8080
+  - name: management
+    port: 8558
+    protocol: TCP
+    targetPort: management
   selector:
     app: "incidents-endpoint"
-  type: LoadBalancer
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
