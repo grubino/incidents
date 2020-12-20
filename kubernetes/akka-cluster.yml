@@ -32,8 +32,6 @@ spec:
         app: incidents-endpoint
         actorSystemName: incidents
     spec:
-      imagePullSecrets:
-      - name: registrycred
       containers:
       - name: incidents
         image: bibilthaysose/incidents
@@ -55,7 +53,7 @@ spec:
         ports:
         # akka-management and bootstrap
         - name: remoting
-          containerPort: 25520
+          containerPort: 2552
           protocol: TCP
         - name: management
           containerPort: 8558
@@ -96,8 +94,6 @@ spec:
         app: incidents
         actorSystemName: incidents
     spec:
-      imagePullSecrets:
-      - name: registrycred
       containers:
       - name: incidents
         image: bibilthaysose/incidents
@@ -111,7 +107,7 @@ spec:
           initialDelaySeconds: 10
         livenessProbe:
           httpGet:
-            path: "/alive"
+            path: /alive
             port: management
           periodSeconds: 10
           failureThreshold: 5
@@ -119,7 +115,7 @@ spec:
         ports:
         # akka-management and bootstrap
         - name: remoting
-          containerPort: 25520
+          containerPort: 2552
           protocol: TCP
         - name: management
           containerPort: 8558
