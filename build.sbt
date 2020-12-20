@@ -25,7 +25,7 @@ Compile / run / fork := true
 
 mainClass in (Compile, run) := Some("com.luzene.Incidents")
 
-dockerExposedPorts := Seq(8080, 8558, 25520)
+dockerExposedPorts := Seq(8080, 8558, 2552)
 dockerUpdateLatest := true
 dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
